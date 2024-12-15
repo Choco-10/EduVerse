@@ -1,0 +1,51 @@
+/* Container for the quiz list */
+.quiz-list-container {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  /* Title for the quiz list page */
+  .quiz-list-title {
+    margin-bottom: 20px;
+    color: #3f51b5;
+  }
+  
+  /* Quiz cards layout */
+  .quiz-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+  
+  /* Styling for individual quiz cards */
+  .quiz-card {
+    width: 300px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Title of each quiz */
+  .quiz-title {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  /* Description for each quiz */
+  .quiz-description {
+    margin-bottom: 15px;
+    color: #555;
+  }
+  
+  /* Button to take the quiz */
+  .take-quiz-button {
+    background-color: #3f51b5;
+    color: white;
+    width: 100%;
+    text-transform: none;
+    font-weight: bold;
+  }
+  
+  .take-quiz-button:hover {
+    background-color: #2c387e;
+  }

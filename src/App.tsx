@@ -1,23 +1,55 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
+import StudentDashboard from "./pages/Dashboard/Student";
+import TeacherDashboard from "./pages/Dashboard/Teacher";
+// import AdminDashboard from "./pages/Dashboard/Admin";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
+import StudentLogin from "./pages/Login/StudentLogin";
+import TeacherLogin from "./pages/Login/TeacherLogin";
 
-function Home() {
-  return <h2>Home</h2>;
-}
+// Custom Material-UI Theme
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#1976d2",
+    },
+    secondary: {
+      main: "#f50057",
+    },
+    background: {
+      default: "#f5f5f5",
+    },
+  },
+  typography: {
+    fontFamily: "Roboto, Arial, sans-serif",
+  },
+});
 
-function Login() {
-  return <h2>Login</h2>;
-}
-
-function App() {
+const App = () => {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-      </Routes>
-    </Router>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Router>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/login/student" element={<StudentLogin />} />
+          <Route path="/login/teacher" element={<TeacherLogin />} />
+
+          {/* Dashboard Routes */}
+          <Route path="/dashboard/student/*" element={<StudentDashboard />} />
+          <Route path="/dashboard/teacher/*" element={<TeacherDashboard />} />
+          {/* <Route path="/dashboard/admin/*" element={<AdminDashboard />} /> */}
+
+          {/* Fallback Route */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Router>
+    </ThemeProvider>
   );
-}
+};
 
 export default App;

@@ -1,0 +1,62 @@
+src/
+├── components/               # Shared reusable components (buttons, cards, etc.)
+├── pages/                    # Top-level pages for routing
+│   ├── Dashboard/            # Main dashboards for Student, Teacher, Admin
+│   │   ├── Student/          
+│   │   │   ├── index.tsx     # Main Student Dashboard Page
+│   │   │   ├── quizzes/      # Quizzes functionality
+│   │   │   │   ├── QuizList.tsx
+│   │   │   │   ├── QuizDetail.tsx
+│   │   │   │   ├── TakeQuiz.tsx
+│   │   │   ├── weeklySchedule/
+│   │   │   │   ├── Schedule.tsx
+│   │   │   │   ├── AddEvent.tsx
+│   │   │   ├── assignments/  # View assignments, submissions, etc.
+│   │   │   │   ├── AssignmentList.tsx
+│   │   │   │   ├── AssignmentDetail.tsx
+│   │   │   ├── attendance/
+│   │   │   │   ├── AttendanceView.tsx
+│   │   │   ├── studyTimer/   # Study timer feature
+│   │   │       ├── Timer.tsx
+│   │   │       ├── TimerHistory.tsx
+│   │   ├── Teacher/          
+│   │   │   ├── index.tsx     # Main Teacher Dashboard Page
+│   │   │   ├── assignments/
+│   │   │   │   ├── PostAssignment.tsx
+│   │   │   │   ├── ManageAssignments.tsx
+│   │   │   ├── quizzes/
+│   │   │   │   ├── CreateQuiz.tsx
+│   │   │   │   ├── QuizResults.tsx
+│   │   │   ├── attendance/   
+│   │   │   │   ├── MarkAttendance.tsx
+│   │   │   │   ├── AttendanceReport.tsx
+│   │   ├── Admin/
+│   │       ├── index.tsx     # Main Admin Dashboard Page
+│   │       ├── manageUsers/
+│   │       │   ├── AssignTeachers.tsx
+│   │       │   ├── ManageStudents.tsx
+│   │       │   ├── ManageTeachers.tsx
+│   │       ├── common/       # Common functionalities for admin
+│   │           ├── Reports.tsx
+│   │           ├── Notifications.tsx
+├── services/                 # API services for fetching and posting data
+│   ├── studentService.ts
+│   ├── teacherService.ts
+│   ├── adminService.ts
+├── hooks/                    # Custom React hooks
+│   ├── useAuth.ts
+│   ├── useFetch.ts
+├── context/                  # Context API for global state management
+│   ├── AuthContext.tsx
+│   ├── DashboardContext.tsx
+├── styles/                   # Global styles or theme configuration
+│   ├── theme.ts
+│   ├── global.css
+├── App.tsx                   # Main entry point for the app
+├── index.tsx                 # Renders the React app
+├── types/                    # TypeScript type definitions
+│   ├── userTypes.ts
+│   ├── dashboardTypes.ts
+└── utils/                    # Utility functions
+    ├── helpers.ts
+    ├── validation.ts
