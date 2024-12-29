@@ -6,7 +6,7 @@ import TeacherDashboard from "./pages/Dashboard/Teacher";
 // import AdminDashboard from "./pages/Dashboard/Admin";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
+//import Register from "./pages/Register";
 import StudentLogin from "./pages/Login/StudentLogin";
 import TeacherLogin from "./pages/Login/TeacherLogin";
 
@@ -39,7 +39,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/login/student" element={<StudentLogin />} />
           <Route path="/login/teacher" element={<TeacherLogin />} />
-          <Route path="/register" element={<Register />} />
+          {/*<Route path="/register" element={<Register />} />*/}
 
           {/* Dashboard Routes */}
           <Route path="/dashboard/student/*" element={<StudentDashboard />} />
