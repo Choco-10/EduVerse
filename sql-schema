@@ -12,16 +12,17 @@ model User {
   name            String
   email           String              @unique
   password        String
-  role            String // Student, Teacher, Admin
-  questionBanks   QuestionBank[] // Opposite relation for QuestionBank.teacher
-  studentQuizzes  StudentQuiz[] // Opposite relation for StudentQuiz.student
-  assignments     StudentAssignment[] // Opposite relation for StudentAssignment.student
-  weeklySchedules WeeklySchedule[] // Opposite relation for WeeklySchedule.teacher
-  studyTimetables StudyTimetable[] // Opposite relation for StudyTimetable.student
-  scores          Score[] // Opposite relation for Score.student
-  studentClasses  Class[]             @relation("StudentClass") // Updated name
-  teacherClasses  Class[]             @relation("ClassTeacher") // Explicit teacher relation
-  Assignment      Assignment[]
+  rollNo          String              @unique // Added rollNo field with unique constraint
+  role            String              // Student, Teacher, Admin
+  questionBanks   QuestionBank[]      // Opposite relation for QuestionBank.teacher
+  studentQuizzes  StudentQuiz[]       // Opposite relation for StudentQuiz.student
+  assignments     StudentAssignment[]  // Opposite relation for StudentAssignment.student
+  weeklySchedules WeeklySchedule[]    // Opposite relation for WeeklySchedule.teacher
+  studyTimetables StudyTimetable[]    // Opposite relation for StudyTimetable.student
+  scores          Score[]              // Opposite relation for Score.student
+  studentClasses  Class[]              @relation("StudentClass") // Updated name
+  teacherClasses  Class[]              @relation("ClassTeacher") // Explicit teacher relation
+  Assignment      Assignment[]         // Associated assignments
 }
 
 model Class {

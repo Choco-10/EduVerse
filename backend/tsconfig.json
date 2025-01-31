@@ -9,7 +9,7 @@
       "forceConsistentCasingInFileNames": true,  // Ensure consistent file name casing
       "skipLibCheck": true                       // Skip type checking of declaration files
     },
-    "include": ["**/*.ts"],                      // Include all .ts files in the project
+    "include": ["**/*.ts", "db.ts"],                      // Include all .ts files in the project
     "exclude": ["node_modules"]                  // Exclude node_modules
   }
   

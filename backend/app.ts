@@ -1,37 +1,28 @@
-import express, { Request, Response, NextFunction } from "express";
-import dotenv from "dotenv";
-import studentController from "./controllers/studentController";
-import teacherController from "./controllers/teacherController";
+import express from 'express';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import { checkConnection } from './db';
+import authRoutes from './routes/authRoutes'; // Import authRoutes
 
-// Load environment variables
 dotenv.config();
 
-// Create an instance of Express
 const app = express();
+const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(express.json()); // Parse JSON request bodies
-app.use(express.urlencoded({ extended: true })); // Parse URL-encoded request bodies
-
-// Test Route
-app.get("/", (req: Request, res: Response) => {
-  res.send("Welcome to the EduVerse Backend!");
-});
+app.use(cors());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // Routes
-app.use("/students", studentController);
-app.use("/teachers", teacherController);
+app.use('/api/auth', authRoutes); // Register authRoutes at '/api/auth'
 
-// Global Error Handling Middleware
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  console.error(err.stack);
-  res.status(err.status || 500).json({ error: err.message || "Internal Server Error" });
+app.get('/', (req, res) => {
+  res.send('Welcome to the EduVerse API');
 });
 
-// Start the server
-const PORT = process.env.PORT || 5000;
 app.listen(PORT, async () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
+  await checkConnection(); // Check database connection during startup
 });
-
-export default app;

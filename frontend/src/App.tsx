@@ -6,9 +6,11 @@ import TeacherDashboard from "./pages/Dashboard/Teacher";
 // import AdminDashboard from "./pages/Dashboard/Admin";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-//import Register from "./pages/Register";
+import Register from "./pages/Register";
 import StudentLogin from "./pages/Login/StudentLogin";
 import TeacherLogin from "./pages/Login/TeacherLogin";
+import StudentRegister from './pages/Register/StudentRegister';
+import TeacherRegister from './pages/Register/TeacherRegister';
 
 // Custom Material-UI Theme
 const theme = createTheme({
@@ -39,7 +41,9 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/login/student" element={<StudentLogin />} />
           <Route path="/login/teacher" element={<TeacherLogin />} />
-          {/*<Route path="/register" element={<Register />} />*/}
+          <Route path="/register" element={<Register />} />
+          <Route path="/register/student" element={<StudentRegister />} />
+          <Route path="/register/teacher" element={<TeacherRegister />} />
 
           {/* Dashboard Routes */}
           <Route path="/dashboard/student/*" element={<StudentDashboard />} />
