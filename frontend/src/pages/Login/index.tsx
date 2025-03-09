@@ -8,7 +8,7 @@ const Login = () => {
 
   return (
     <div className={styles["login-container"]}>
-      <Typography variant="h4" className={styles["login-title"]} gutterBottom>
+      <Typography variant="h3" className={styles["login-title"]} gutterBottom>
         Login to Eduverse
       </Typography>
 
