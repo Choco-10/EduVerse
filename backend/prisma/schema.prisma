@@ -2,144 +2,148 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator erd {
+  provider = "prisma-erd-generator"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model User {
-  user_id         Int                 @id @default(autoincrement())
+model users {
+  id              Int               @id @default(autoincrement())
   name            String
-  email           String              @unique
+  email           String            @unique
   password        String
-  rollNo          String              @unique // Added rollNo field with unique constraint
-  role            String              // Student, Teacher, Admin
-  questionBanks   QuestionBank[]      // Opposite relation for QuestionBank.teacher
-  studentQuizzes  StudentQuiz[]       // Opposite relation for StudentQuiz.student
-  assignments     StudentAssignment[]  // Opposite relation for StudentAssignment.student
-  weeklySchedules WeeklySchedule[]    // Opposite relation for WeeklySchedule.teacher
-  studyTimetables StudyTimetable[]    // Opposite relation for StudyTimetable.student
-  scores          Score[]              // Opposite relation for Score.student
-  studentClasses  Class[]              @relation("StudentClass") // Updated name
-  teacherClasses  Class[]              @relation("ClassTeacher") // Explicit teacher relation
-  Assignment      Assignment[]         // Associated assignments
+  roll_no         String            @unique
+  role            String
+  assignments     assignments[]
+  teacher_classes classes[]         @relation("class_teacher")
+  question_banks  question_banks[]
+  scores          scores[]
+  student_assignments student_assignments[]
+  student_quizzes student_quizzes[]
+  study_timetables study_timetables[]
+  weekly_schedules weekly_schedules[]
+  student_classes classes[]         @relation("student_class")
 }
 
-model Class {
+model classes {
   id               Int              @id @default(autoincrement())
   name             String
-  students         User[]           @relation("StudentClass")
-  teacher          User?            @relation("ClassTeacher", fields: [class_teacher_id], references: [user_id])
   class_teacher_id Int?
-  questionBanks    QuestionBank[] // Opposite relation for QuestionBank.class
-  quizzes          Quiz[] // Opposite relation for Quiz.class
-  assignments      Assignment[] // Opposite relation for Assignment.class
-  weeklySchedules  WeeklySchedule[] // Opposite relation for WeeklySchedule.class
+  assignments      assignments[]
+  teacher          users?           @relation("class_teacher", fields: [class_teacher_id], references: [id])
+  question_banks   question_banks[]
+  quizzes          quizzes[]
+  weekly_schedules weekly_schedules[]
+  students         users[]          @relation("student_class")
 }
 
-model Subject {
-  id              Int              @id @default(autoincrement())
+model subjects {
+  id              Int               @id @default(autoincrement())
   name            String
-  questionBanks   QuestionBank[] // Opposite relation for QuestionBank.subject
-  quizzes         Quiz[] // Opposite relation for Quiz.subject
-  studyTimetables StudyTimetable[] // Opposite relation for StudyTimetable.subject
-  weeklySchedules WeeklySchedule[] // Opposite relation for WeeklySchedule.subject
-  scores          Score[] // Opposite relation for Score.subject
-  Assignment      Assignment[]
+  assignments     assignments[]
+  question_banks  question_banks[]
+  quizzes         quizzes[]
+  scores          scores[]
+  study_timetables study_timetables[]
+  weekly_schedules weekly_schedules[]
 }
 
-model QuestionBank {
-  id         Int        @id @default(autoincrement())
+model question_banks {
+  id         Int       @id @default(autoincrement())
   teacher_id Int
   subject_id Int
   class_id   Int
-  teacher    User       @relation(fields: [teacher_id], references: [user_id])
-  subject    Subject    @relation(fields: [subject_id], references: [id])
-  class      Class      @relation(fields: [class_id], references: [id])
-  questions  Question[] // Opposite relation for Question.questionBank
-  quizzes    Quiz[] // Opposite relation for Quiz.questionBank
+  questions  questions[]
+  class      classes   @relation(fields: [class_id], references: [id])
+  subject    subjects  @relation(fields: [subject_id], references: [id])
+  teacher    users     @relation(fields: [teacher_id], references: [id])
+  quizzes    quizzes[]
 }
 
-model Question {
-  id              Int            @id @default(autoincrement())
+model questions {
+  id              Int             @id @default(autoincrement())
   content         String
-  questionBank_id Int
-  questionBank    QuestionBank   @relation(fields: [questionBank_id], references: [id])
-  quizQuestions   QuizQuestion[] // Opposite relation for QuizQuestion.question
+  question_bank_id Int
+  question_bank   question_banks  @relation(fields: [question_bank_id], references: [id])
+  quiz_questions  quiz_questions[]
 }
 
-model Quiz {
-  id               Int            @id @default(autoincrement())
+model quizzes {
+  id               Int             @id @default(autoincrement())
   class_id         Int
   subject_id       Int
   question_bank_id Int
-  class            Class          @relation(fields: [class_id], references: [id])
-  subject          Subject        @relation(fields: [subject_id], references: [id])
-  questionBank     QuestionBank   @relation(fields: [question_bank_id], references: [id])
-  quizQuestions    QuizQuestion[] // Opposite relation for QuizQuestion.quiz
-  studentQuizzes   StudentQuiz[] // Opposite relation for StudentQuiz.quiz
+  class            classes         @relation(fields: [class_id], references: [id])
+  question_bank    question_banks  @relation(fields: [question_bank_id], references: [id])
+  subject          subjects        @relation(fields: [subject_id], references: [id])
+  quiz_questions   quiz_questions[]
+  student_quizzes  student_quizzes[]
 }
 
-model QuizQuestion {
-  id          Int      @id @default(autoincrement())
+model quiz_questions {
+  id          Int       @id @default(autoincrement())
   quiz_id     Int
   question_id Int
-  quiz        Quiz     @relation(fields: [quiz_id], references: [id])
-  question    Question @relation(fields: [question_id], references: [id])
+  question    questions @relation(fields: [question_id], references: [id])
+  quiz        quizzes   @relation(fields: [quiz_id], references: [id])
 }
 
-model StudentQuiz {
-  id         Int  @id @default(autoincrement())
+model student_quizzes {
+  id         Int   @id @default(autoincrement())
   student_id Int
   quiz_id    Int
-  student    User @relation(fields: [student_id], references: [user_id])
-  quiz       Quiz @relation(fields: [quiz_id], references: [id])
+  quiz       quizzes @relation(fields: [quiz_id], references: [id])
+  student    users   @relation(fields: [student_id], references: [id])
 }
 
-model Assignment {
+model assignments {
   id                 Int                 @id @default(autoincrement())
   title              String
   description        String
   teacher_id         Int
   class_id           Int
   subject_id         Int
-  teacher            User                @relation(fields: [teacher_id], references: [user_id])
-  class              Class               @relation(fields: [class_id], references: [id])
-  subject            Subject             @relation(fields: [subject_id], references: [id])
-  studentAssignments StudentAssignment[] // Opposite relation for StudentAssignment.assignment
+  class              classes             @relation(fields: [class_id], references: [id])
+  subject            subjects            @relation(fields: [subject_id], references: [id])
+  teacher            users               @relation(fields: [teacher_id], references: [id])
+  student_assignments student_assignments[]
 }
 
-model StudentAssignment {
-  id            Int        @id @default(autoincrement())
+model student_assignments {
+  id            Int         @id @default(autoincrement())
   assignment_id Int
   student_id    Int
-  assignment    Assignment @relation(fields: [assignment_id], references: [id])
-  student       User       @relation(fields: [student_id], references: [user_id])
+  assignment    assignments @relation(fields: [assignment_id], references: [id])
+  student       users       @relation(fields: [student_id], references: [id])
 }
 
-model WeeklySchedule {
-  id         Int     @id @default(autoincrement())
+model weekly_schedules {
+  id         Int      @id @default(autoincrement())
   class_id   Int
   teacher_id Int
   subject_id Int
-  class      Class   @relation(fields: [class_id], references: [id])
-  teacher    User    @relation(fields: [teacher_id], references: [user_id])
-  subject    Subject @relation(fields: [subject_id], references: [id])
+  class      classes  @relation(fields: [class_id], references: [id])
+  subject    subjects @relation(fields: [subject_id], references: [id])
+  teacher    users    @relation(fields: [teacher_id], references: [id])
 }
 
-model StudyTimetable {
-  id         Int     @id @default(autoincrement())
+model study_timetables {
+  id         Int      @id @default(autoincrement())
   student_id Int
   subject_id Int
-  student    User    @relation(fields: [student_id], references: [user_id])
-  subject    Subject @relation(fields: [subject_id], references: [id])
+  student    users    @relation(fields: [student_id], references: [id])
+  subject    subjects @relation(fields: [subject_id], references: [id])
 }
 
-model Score {
-  id         Int     @id @default(autoincrement())
+model scores {
+  id         Int      @id @default(autoincrement())
   student_id Int
   subject_id Int
   marks      Int
-  student    User    @relation(fields: [student_id], references: [user_id])
-  subject    Subject @relation(fields: [subject_id], references: [id])
+  student    users    @relation(fields: [student_id], references: [id])
+  subject    subjects @relation(fields: [subject_id], references: [id])
 }
