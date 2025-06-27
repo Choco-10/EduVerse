@@ -8,6 +8,7 @@
     "esModuleInterop": true,
     "noImplicitReturns": true,
     "strictNullChecks": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "typeRoots": ["./src/types", "./node_modules/@types"]
   }
 }

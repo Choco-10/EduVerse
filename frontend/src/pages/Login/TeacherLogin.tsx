@@ -21,6 +21,7 @@ const TeacherLogin = () => {
     e.preventDefault();
     try {
       const response = await axios.post("http://localhost:5000/api/auth/login", { ...formData, role: "Teacher" });
+      localStorage.setItem("token", response.data.token);
       alert(response.data.message);
       navigate("/teacher/dashboard");
     } catch (err: any) {

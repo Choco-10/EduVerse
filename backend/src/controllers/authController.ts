@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
+import { generateToken } from "../utils/jwt";
 
 const prisma = new PrismaClient();
 
@@ -11,7 +12,7 @@ export const registerUser = async (
   const { name, email, password, roll_no, role } = req.body;
 
   try {
-    const existingUser = await prisma.users.findUnique({ where: { email } });
+    const existingUser = await prisma.user.findUnique({ where: { email } });
 
     if (existingUser) {
       res.status(400).json({ error: "Email already registered" });
@@ -20,7 +21,7 @@ export const registerUser = async (
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await prisma.users.create({
+    await prisma.user.create({
       data: { name, email, password: hashedPassword, roll_no, role },
     });
 
@@ -35,22 +36,31 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
   const { email, password, role } = req.body;
 
   try {
-    const user = await prisma.users.findUnique({ where: { email } });
+    const user = await prisma.user.findUnique({ where: { email } });
 
     if (!user || user.role !== role) {
-      res.status(401).json({ error: "Invalid email or password" });
+      res.status(401).json({ error: "Invalid email or role" });
       return;
     }
 
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isPasswordCorrect) {
-      res.status(401).json({ error: "Invalid email or password" });
+      res.status(401).json({ error: "Invalid password" });
       return;
     }
 
-    res
-      .status(200)
-      .json({ message: "Login successful", userId: user.id, role: user.role });
+    const token = generateToken({ id: user.id, role: user.role });
+
+    res.status(200).json({
+      message: "Login successful",
+      token,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ error: "Internal server error" });

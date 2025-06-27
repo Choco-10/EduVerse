@@ -11,139 +11,139 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model users {
-  id              Int               @id @default(autoincrement())
-  name            String
-  email           String            @unique
-  password        String
-  roll_no         String            @unique
-  role            String
-  assignments     assignments[]
-  teacher_classes classes[]         @relation("class_teacher")
-  question_banks  question_banks[]
-  scores          scores[]
-  student_assignments student_assignments[]
-  student_quizzes student_quizzes[]
-  study_timetables study_timetables[]
-  weekly_schedules weekly_schedules[]
-  student_classes classes[]         @relation("student_class")
+model User {
+  id                Int                @id @default(autoincrement())
+  name              String
+  email             String             @unique
+  password          String
+  roll_no           String             @unique
+  role              String
+  assignments       Assignment[]
+  teacher_classes   Class[]            @relation("class_teacher")
+  questionBanks     QuestionBank[]
+  scores            Score[]
+  studentAssignments StudentAssignment[]
+  studentQuizzes    StudentQuiz[]
+  studyTimetables   StudyTimetable[]
+  weeklySchedules   WeeklySchedule[]
+  student_classes   Class[]            @relation("student_class")
 }
 
-model classes {
-  id               Int              @id @default(autoincrement())
+model Class {
+  id               Int               @id @default(autoincrement())
   name             String
   class_teacher_id Int?
-  assignments      assignments[]
-  teacher          users?           @relation("class_teacher", fields: [class_teacher_id], references: [id])
-  question_banks   question_banks[]
-  quizzes          quizzes[]
-  weekly_schedules weekly_schedules[]
-  students         users[]          @relation("student_class")
+  assignments      Assignment[]
+  teacher          User?             @relation("class_teacher", fields: [class_teacher_id], references: [id])
+  questionBanks    QuestionBank[]
+  quizzes          Quiz[]
+  weeklySchedules  WeeklySchedule[]
+  students         User[]            @relation("student_class")
 }
 
-model subjects {
+model Subject {
   id              Int               @id @default(autoincrement())
   name            String
-  assignments     assignments[]
-  question_banks  question_banks[]
-  quizzes         quizzes[]
-  scores          scores[]
-  study_timetables study_timetables[]
-  weekly_schedules weekly_schedules[]
+  assignments     Assignment[]
+  questionBanks   QuestionBank[]
+  quizzes         Quiz[]
+  scores          Score[]
+  studyTimetables StudyTimetable[]
+  weeklySchedules WeeklySchedule[]
 }
 
-model question_banks {
-  id         Int       @id @default(autoincrement())
+model QuestionBank {
+  id         Int        @id @default(autoincrement())
   teacher_id Int
   subject_id Int
   class_id   Int
-  questions  questions[]
-  class      classes   @relation(fields: [class_id], references: [id])
-  subject    subjects  @relation(fields: [subject_id], references: [id])
-  teacher    users     @relation(fields: [teacher_id], references: [id])
-  quizzes    quizzes[]
+  questions  Question[]
+  class      Class      @relation(fields: [class_id], references: [id])
+  subject    Subject    @relation(fields: [subject_id], references: [id])
+  teacher    User       @relation(fields: [teacher_id], references: [id])
+  quizzes    Quiz[]
 }
 
-model questions {
-  id              Int             @id @default(autoincrement())
-  content         String
+model Question {
+  id             Int            @id @default(autoincrement())
+  content        String
   question_bank_id Int
-  question_bank   question_banks  @relation(fields: [question_bank_id], references: [id])
-  quiz_questions  quiz_questions[]
+  question_bank  QuestionBank   @relation(fields: [question_bank_id], references: [id])
+  quizQuestions  QuizQuestion[]
 }
 
-model quizzes {
+model Quiz {
   id               Int             @id @default(autoincrement())
   class_id         Int
   subject_id       Int
   question_bank_id Int
-  class            classes         @relation(fields: [class_id], references: [id])
-  question_bank    question_banks  @relation(fields: [question_bank_id], references: [id])
-  subject          subjects        @relation(fields: [subject_id], references: [id])
-  quiz_questions   quiz_questions[]
-  student_quizzes  student_quizzes[]
+  class            Class           @relation(fields: [class_id], references: [id])
+  question_bank    QuestionBank    @relation(fields: [question_bank_id], references: [id])
+  subject          Subject         @relation(fields: [subject_id], references: [id])
+  quizQuestions    QuizQuestion[]
+  studentQuizzes   StudentQuiz[]
 }
 
-model quiz_questions {
-  id          Int       @id @default(autoincrement())
+model QuizQuestion {
+  id          Int      @id @default(autoincrement())
   quiz_id     Int
   question_id Int
-  question    questions @relation(fields: [question_id], references: [id])
-  quiz        quizzes   @relation(fields: [quiz_id], references: [id])
+  question    Question @relation(fields: [question_id], references: [id])
+  quiz        Quiz     @relation(fields: [quiz_id], references: [id])
 }
 
-model student_quizzes {
+model StudentQuiz {
   id         Int   @id @default(autoincrement())
   student_id Int
   quiz_id    Int
-  quiz       quizzes @relation(fields: [quiz_id], references: [id])
-  student    users   @relation(fields: [student_id], references: [id])
+  quiz       Quiz  @relation(fields: [quiz_id], references: [id])
+  student    User  @relation(fields: [student_id], references: [id])
 }
 
-model assignments {
+model Assignment {
   id                 Int                 @id @default(autoincrement())
   title              String
   description        String
   teacher_id         Int
   class_id           Int
   subject_id         Int
-  class              classes             @relation(fields: [class_id], references: [id])
-  subject            subjects            @relation(fields: [subject_id], references: [id])
-  teacher            users               @relation(fields: [teacher_id], references: [id])
-  student_assignments student_assignments[]
+  class              Class               @relation(fields: [class_id], references: [id])
+  subject            Subject             @relation(fields: [subject_id], references: [id])
+  teacher            User                @relation(fields: [teacher_id], references: [id])
+  studentAssignments StudentAssignment[]
 }
 
-model student_assignments {
+model StudentAssignment {
   id            Int         @id @default(autoincrement())
   assignment_id Int
   student_id    Int
-  assignment    assignments @relation(fields: [assignment_id], references: [id])
-  student       users       @relation(fields: [student_id], references: [id])
+  assignment    Assignment  @relation(fields: [assignment_id], references: [id])
+  student       User        @relation(fields: [student_id], references: [id])
 }
 
-model weekly_schedules {
+model WeeklySchedule {
   id         Int      @id @default(autoincrement())
   class_id   Int
   teacher_id Int
   subject_id Int
-  class      classes  @relation(fields: [class_id], references: [id])
-  subject    subjects @relation(fields: [subject_id], references: [id])
-  teacher    users    @relation(fields: [teacher_id], references: [id])
+  class      Class    @relation(fields: [class_id], references: [id])
+  subject    Subject  @relation(fields: [subject_id], references: [id])
+  teacher    User     @relation(fields: [teacher_id], references: [id])
 }
 
-model study_timetables {
+model StudyTimetable {
   id         Int      @id @default(autoincrement())
   student_id Int
   subject_id Int
-  student    users    @relation(fields: [student_id], references: [id])
-  subject    subjects @relation(fields: [subject_id], references: [id])
+  student    User     @relation(fields: [student_id], references: [id])
+  subject    Subject  @relation(fields: [subject_id], references: [id])
 }
 
-model scores {
+model Score {
   id         Int      @id @default(autoincrement())
   student_id Int
   subject_id Int
   marks      Int
-  student    users    @relation(fields: [student_id], references: [id])
-  subject    subjects @relation(fields: [subject_id], references: [id])
+  student    User     @relation(fields: [student_id], references: [id])
+  subject    Subject  @relation(fields: [subject_id], references: [id])
 }
