@@ -22,7 +22,7 @@ const StudentLogin = () => {
     try {
       const response = await axios.post("http://localhost:5000/api/auth/login", { ...formData, role: "Student" });
       localStorage.setItem("token", response.data.token);
-      alert(response.data.message);
+      //alert(response.data.message);
       navigate("/student/dashboard");
     } catch (err: any) {
       setError(err.response?.data?.error || "Login failed. Please try again.");

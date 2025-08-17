@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
+import prisma from "../db";
 import bcrypt from "bcrypt";
-
-const prisma = new PrismaClient();
 
 // ✅ GET all classes for the logged-in teacher
 export const getTeacherClasses = async (req: Request, res: Response): Promise<void> => {
@@ -76,48 +74,52 @@ export const deleteClass = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
-// ✅ ADD student to class
 export const addStudentToClass = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, roll_no, classId, institute } = req.body;
+    const { roll_no } = req.body;
+    const { classId } = req.params;
     const teacherId = Number(req.user?.id);
 
-    if (!institute) {
-      res.status(400).json({ error: "Institute is required" });
+    if (!roll_no || !classId) {
+      res.status(400).json({ error: "Roll number and classId are required" });
       return;
     }
 
     const classExists = await prisma.class.findFirst({
-      where: { id: classId, class_teacher_id: teacherId },
+      where: { id: Number(classId), class_teacher_id: teacherId },
     });
 
     if (!classExists) {
-      res.status(403).json({ error: "You are not authorized to add students to this class" });
+      res.status(403).json({ error: "You are not authorized to modify this class" });
       return;
     }
 
-    const email = `${roll_no}@${institute}.edu`;
-    const defaultPassword = await bcrypt.hash("user@123", 10);
+    const student = await prisma.user.findUnique({
+      where: { roll_no },
+    });
 
-    const student = await prisma.user.create({
+    if (!student || student.role !== "Student") {
+      res.status(404).json({ error: "Student with this roll number not found" });
+      return;
+    }
+
+    // Add student to class
+    await prisma.user.update({
+      where: { id: student.id },
       data: {
-        name,
-        email,
-        password: defaultPassword,
-        roll_no,
-        role: "Student",
         student_classes: {
-          connect: { id: classId },
+          connect: [{ id: Number(classId) }],
         },
       },
     });
 
-    res.json({ message: "Student added successfully", student });
+    res.json({ message: "Student added to class successfully" });
   } catch (error: any) {
     console.error("Error adding student:", error);
     res.status(400).json({ error: error.message || "Failed to add student" });
   }
 };
+
 
 export const getClassDetails = async (req: Request, res: Response): Promise<void> => {
   const teacherId = req.user!.id;
@@ -133,4 +135,31 @@ export const getClassDetails = async (req: Request, res: Response): Promise<void
     return;
   }
   res.json({ class: { id: cls.id, name: cls.name }, students: cls.students });
+};
+
+
+
+export const addSchedule = async (req: Request, res: Response): Promise<void> => {
+  const { class_id, subject_id } = req.body;
+  const teacher_id = req.user?.id;
+
+  if (!class_id || !subject_id || !teacher_id) {
+    res.status(400).json({ error: "Missing required fields" });
+    return;
+  }
+
+  try {
+    const schedule = await prisma.weeklySchedule.create({
+      data: {
+        class_id,
+        teacher_id,
+        subject_id,
+      },
+    });
+
+    res.status(201).json({ message: "Schedule created", schedule });
+  } catch (err) {
+    console.error("Error creating schedule:", err);
+    res.status(500).json({ error: "Failed to create schedule" });
+  }
 };

@@ -92,6 +92,14 @@ const Classes = () => {
               divider
               component="div"
               onClick={() => navigate(`/teacher/dashboard/classes/${cls.id}`)}
+              sx={{
+                cursor: "pointer",
+                borderRadius: 1,
+                transition: "background-color 0.2s",
+                "&:hover": {
+                  backgroundColor: "#f0f0f0", // light gray background
+                },
+              }}
             >
               <ListItemText
                 primary={cls.name}

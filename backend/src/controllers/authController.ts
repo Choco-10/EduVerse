@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
+import prisma from "../db";
 import bcrypt from "bcrypt";
 import { generateToken } from "../utils/jwt";
 
-const prisma = new PrismaClient();
 
 export const registerUser = async (
   req: Request,
@@ -51,6 +50,11 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
 
     const token = generateToken({ id: user.id, role: user.role });
 
+    let institute = null;
+    if (user.role === "ADMIN") {
+      institute = await prisma.institute.findFirst();
+    }
+
     res.status(200).json({
       message: "Login successful",
       token,
@@ -60,6 +64,7 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
         email: user.email,
         role: user.role,
       },
+      institute,
     });
   } catch (error) {
     console.error("Login error:", error);

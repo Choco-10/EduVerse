@@ -1,13 +1,12 @@
 import React from "react";
-import { Drawer, List, ListItemText, Toolbar, ListItemButton } from "@mui/material";
+import { Drawer, List, ListItemText, Toolbar, ListItemButton, } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 
 const navItems = [
   { label: "Classes", path: "classes" },
   { label: "Assignments", path: "assignments" },
   { label: "Quizzes", path: "quizzes" },
-  { label: "Schedules", path: "schedules" },
-  { label: "Students", path: "students" },
+  { label: "Students", path: "students" }, // Only managing own students
 ];
 
 const TeacherSidebar = () => {

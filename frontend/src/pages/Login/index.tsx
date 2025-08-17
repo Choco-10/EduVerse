@@ -1,4 +1,3 @@
-import React from "react";
 import { Typography, Button, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import styles from "./Login.module.css";
@@ -24,6 +23,12 @@ const Login = () => {
           onClick={() => navigate("/login/teacher")}
         >
           <Typography className={styles["option-text"]}>Teacher</Typography>
+        </Button>
+        <Button
+          className={styles["option-box"]}
+          onClick={() => navigate("/login/admin")}
+        >
+          <Typography className={styles["option-text"]}>Admin</Typography>
         </Button>
       </Box>
 

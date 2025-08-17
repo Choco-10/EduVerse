@@ -10,7 +10,7 @@ const Register = () => {
     name: "",
     email: "",
     password: "",
-    roll_no: "", // Changed `rollNo` → `roll_no`
+    roll_no: "",
     role: "",
   });
 
@@ -60,7 +60,7 @@ const Register = () => {
         <TextField label="Password" type="password" name="password" value={formData.password} onChange={handleChange} required fullWidth />
 
         <Box className={styles["role-selection"]}>
-          {["Student", "Teacher", "Admin"].map((role) => (
+          {["STUDENT", "TEACHER", "ADMIN"].map((role) => (
             <Button
               key={role}
               className={`${styles["role-button"]} ${selectedRole === role ? styles["selected"] : ""}`}

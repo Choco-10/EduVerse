@@ -12,7 +12,7 @@ export const validateLogin = (
     return;
   }
 
-  if (!["Student", "Teacher"].includes(role)) {
+  if (!["Student", "Teacher", "Admin"].includes(role)) {
     res.status(400).json({ error: "Invalid role" });
     return;
   }

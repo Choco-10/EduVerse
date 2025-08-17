@@ -147,3 +147,8 @@ model Score {
   student    User     @relation(fields: [student_id], references: [id])
   subject    Subject  @relation(fields: [subject_id], references: [id])
 }
+
+model Institute {
+  id    Int    @id @default(autoincrement())
+  name  String
+}
