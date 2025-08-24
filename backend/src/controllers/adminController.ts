@@ -34,7 +34,7 @@ export const createTeacher = async (req: Request, res: Response): Promise<void> 
         roll_no,
         email: `${roll_no}@${institute.name}.eduverse.com`,
         password: hashedPassword,
-        role: "Teacher",
+        role: "TEACHER",
       },
     });
 

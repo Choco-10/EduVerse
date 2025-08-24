@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TextField, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../../api/axios";
 import styles from "./UserLogin.module.css";
 
 const TeacherLogin = () => {
@@ -20,7 +20,7 @@ const TeacherLogin = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/login", { ...formData, role: "Teacher" });
+      const response = await axios.post("/auth/login", { ...formData, role: "TEACHER" });
       localStorage.setItem("token", response.data.token);
       //alert(response.data.message);
       navigate("/teacher/dashboard");

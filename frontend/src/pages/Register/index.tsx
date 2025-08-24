@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TextField, Button, Typography, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../../api/axios";
 import styles from "./Register.module.css";
 
 const Register = () => {
@@ -37,7 +37,7 @@ const Register = () => {
     setError(null); // Reset error state
 
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/register", formData);
+      const response = await axios.post("/auth/register", formData);
       alert(response.data.message);
       navigate("/login");
     } catch (err: any) {

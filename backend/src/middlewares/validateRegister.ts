@@ -17,7 +17,7 @@ export const validateRegister = (
     return;
   }
 
-  if (!["Student", "Teacher", "Admin"].includes(role)) {
+  if (!["STUDENT", "TEACHER", "ADMIN"].includes(role)) {
     res.status(400).json({ error: "Invalid role selected" });
     return;
   }

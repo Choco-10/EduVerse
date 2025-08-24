@@ -98,7 +98,7 @@ export const addStudentToClass = async (req: Request, res: Response): Promise<vo
       where: { roll_no },
     });
 
-    if (!student || student.role !== "Student") {
+    if (!student || student.role !== "STUDENT") {
       res.status(404).json({ error: "Student with this roll number not found" });
       return;
     }

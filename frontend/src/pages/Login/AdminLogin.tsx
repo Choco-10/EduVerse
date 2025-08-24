@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TextField, Button, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../../api/axios";
 import styles from "./UserLogin.module.css";
 
 const AdminLogin = () => {
@@ -20,7 +20,7 @@ const AdminLogin = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/api/auth/login", { 
+      const response = await axios.post("/auth/login", { 
         ...formData, 
         role: "ADMIN"
       });
